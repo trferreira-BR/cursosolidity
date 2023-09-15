@@ -5,6 +5,11 @@ This work is licensed under a Creative Commons Attribution 4.0 International Lic
 */
 
 //contract adress: 0x251942451D63f7CC796c85050111F73355f40f4E
+//_NOMELOCADOR:: thiago
+//_NOMELOCATARIO: jeff
+//_CONTALOCADOR: 0x523490C78E5c100b7c845578eFA7C6E4817e3Fd4
+//_VALORDOALUGUEL: 1
+
 pragma solidity 0.8.19;
 
 contract Aluguel {
