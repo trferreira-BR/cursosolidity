@@ -4,11 +4,11 @@ SPDX-License-Identifier: CC-BY-4.0
 This work is licensed under a Creative Commons Attribution 4.0 International License.
 */
 
-//contract adress: 0x251942451D63f7CC796c85050111F73355f40f4E
+//contract adress: 0xE8ae81cdb4A6401Cb9b3feE19287Dd777D8ecE49
 //_NOMELOCADOR:: thiago
 //_NOMELOCATARIO: jeff
 //_CONTALOCADOR: 0x523490C78E5c100b7c845578eFA7C6E4817e3Fd4
-//_VALORDOALUGUEL: 2
+//_VALORDOALUGUEL: 4
 
 pragma solidity 0.8.19;
 
@@ -25,7 +25,7 @@ contract Aluguel {
     3 - 04/2020 = true
     */
     address payable public contaLocador;
-    address public owner;
+    address public contaLocatario;
 
     constructor(    string memory _nomeLocador, 
                     string memory _nomeLocatario, 
@@ -35,7 +35,7 @@ contract Aluguel {
         locatario = _nomeLocatario;
         valor = _valorDoAluguel;
         contaLocador = _contaLocador;
-        owner = msg.sender;
+        contaLocatario = msg.sender;
     }
  
     function valorAtualDoAluguel() public view returns (uint256) {
@@ -74,7 +74,7 @@ contract Aluguel {
     
     function receberPagamento() public payable {
         require(msg.value>=valor, "Valor insuficiente");
-        require(msg.sender == owner, "Apenas locatario pode realizar pagamento.");
+        require(msg.sender == contaLocatario, "Apenas locatario pode realizar pagamento.");
         contaLocador.transfer(msg.value);
         statusPagamento.push(true);
     }
