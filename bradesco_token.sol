@@ -3,7 +3,7 @@ SPDX-License-Identifier: CC-BY-4.0
 (c) Desenvolvido por Jeff Prestes
 This work is licensed under a Creative Commons Attribution 4.0 International License.
 */
-// CONTRACT - 0xDBf95c09f8AE75C214D24248c79Dc9AB70035205
+// CONTRACT - 0x1e2069274F724418b4BA91629d01A87C24a07e11
 pragma solidity 0.8.19;
 
 // OpenZeppelin Contracts v4.4.1 (token/ERC20/IERC20.sol)
