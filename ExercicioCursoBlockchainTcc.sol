@@ -8,7 +8,7 @@ pragma solidity 0.8.19;
 
 import "https://github.com/jeffprestes/cursosolidity/blob/master/bradesco_token_aberto.sol";
 
-// CONTRACT: 0x523490C78E5c100b7c845578eFA7C6E4817e3Fd4
+// CONTRACT: 0x4069F00a9278e9EDEA491F4C71970055B8F1d1fA
 
 contract ExercicioCursoBlockchainTcc {
 
@@ -46,6 +46,10 @@ contract ExercicioCursoBlockchainTcc {
 
     function gerarTokenParaEuCliente(uint256 _amount) public returns (bool){
         return exercicioToken.mint(address(this), _amount);
+    }
+
+    function transfereTokens(address _to, uint256 amount) public returns (bool){
+        return exercicioToken.transfer(_to, amount);
     }
 }
 
