@@ -8,7 +8,7 @@ pragma solidity 0.8.19;
 
 import "https://github.com/jeffprestes/cursosolidity/blob/master/bradesco_token_aberto.sol";
 
-// CONTRACT: 0xaA4E2BA227f3DEdA4F3759cD4FA8329E2bddE5b2
+// CONTRACT: 0x46BcD019e57CC2C07E5E41A050b90579484964BE
 
 /*
     Contrato que representa uma custodia
@@ -35,7 +35,7 @@ contract ExercicioCursoBlockchainTcc {
         string memory _sobreNome,        
         string memory _agencia,
         string memory _conta,
-        address _enderecoToken) {
+        address _enderecoToken) payable {
 
         cliente = msg.sender;
         clienteEntidade = Cliente(_primeiroNome, _sobreNome, _agencia, _conta, payable(cliente), true);
@@ -65,8 +65,10 @@ contract ExercicioCursoBlockchainTcc {
         return address(this).balance;
     }
 
-    function transfMoedaNativa(address payable _to, uint256 amount) public payable returns(bool) {
-        return token.transferFrom(address(this), _to, amount);
+    function transfMoedaNativa(address _to, uint256 _amount) public payable {
+        require(saldoAtualMoedaNativa() >= _amount, "Nao pode ser enviado valor maior que o saldo atual");
+        (bool ok, ) = _to.call{value: _amount}(abi.encodeWithSignature("takeMoney()"));
+        require(ok, "transfer failed");
     }
 
     receive() external payable {
