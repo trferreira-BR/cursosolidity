@@ -8,67 +8,38 @@ pragma solidity 0.8.19;
 
 import "https://github.com/jeffprestes/cursosolidity/blob/master/bradesco_token_aberto.sol";
 
-// CONTRACT: 0x9A1d29d1EE52cB5C94c2A466D48dbA168e8a6a46
+// CONTRACT: 0xaA4E2BA227f3DEdA4F3759cD4FA8329E2bddE5b2
 
+/*
+    Contrato que representa uma custodia
+*/
 contract ExercicioCursoBlockchainTcc {
 
-    Cliente private cliente;
-    ExercicioToken private exercicioToken;
-    Custodia private custodia;
+    Cliente private clienteEntidade;
+    address private cliente;
+    ExercicioToken private token;
 
     struct Cliente {
         string primeiroNome;
         string sobreNome;
+        string agencia;
+        string conta;
         address payable endereco; //0x0
-        bytes32 hashConta; // 0x0        
         bool existe; //false
     }
+
+    event EtherRecebido();
 
     constructor(
         string memory _primeiroNome,
         string memory _sobreNome,        
         string memory _agencia,
         string memory _conta,
-        address _enderecoContratoToken) {
+        address _enderecoToken) {
 
-        string memory strTemp = string.concat(_agencia, _conta);
-        bytes memory bTemp = bytes(strTemp);
-        bytes32 hashTemp = keccak256(bTemp);
-
-        custodia = new Custodia(hashTemp, _enderecoContratoToken);
-        cliente = Cliente(_primeiroNome, _sobreNome, payable(address(custodia)), hashTemp, true);
-
-        exercicioToken = ExercicioToken(_enderecoContratoToken);
-    }
-
-    function meuSaldo() public view returns(uint256) {
-        return custodia.meuSaldo();
-    }
-
-    function gerarTokenParaEuCliente(uint256 _amount) public returns (bool){
-        return custodia.gerarTokens(_amount);
-    }
-
-    function saldoAtualCustodiaMoedaNativa() public view returns (uint){
-        return custodia.saldoAtualMoedaNativa();
-    }
-
-    function transfereCriptomoeda(address _to, uint256 _amount) public returns (bool) {
-        return custodia.transfereTokens(_to, _amount);
-    }
-
-}
-
-contract Custodia {
-    bytes32 private hashConta;
-    ExercicioToken private token;
-    address private cliente;
-
-    event EtherRecebido();
-
-    constructor(bytes32 _hashConta, address _enderecoToken) {
-        hashConta = _hashConta;
         cliente = msg.sender;
+        clienteEntidade = Cliente(_primeiroNome, _sobreNome, _agencia, _conta, payable(cliente), true);
+
         token = ExercicioToken(_enderecoToken);
     }
 
@@ -78,7 +49,7 @@ contract Custodia {
         return token.balanceOf(address(this));
     }
 
-    function gerarTokens(uint256 _amount) public returns (bool){
+    function gerarTokenParaEuCliente(uint256 _amount) public returns (bool){
         //COMENTEI UMA POSSIVEL REGRA PARA PERMITIR QUE O CLIENTE NAO GERE TOKENS PARA ELE MESMO
         //require(msg.sender != cliente, "Cliente nao pode gerar tokens para ele mesmo");
         return token.mint(address(this), _amount);
@@ -92,6 +63,10 @@ contract Custodia {
 
     function saldoAtualMoedaNativa() public view returns (uint){
         return address(this).balance;
+    }
+
+    function transfMoedaNativa(address payable _to, uint256 amount) public payable returns(bool) {
+        return token.transferFrom(address(this), _to, amount);
     }
 
     receive() external payable {
